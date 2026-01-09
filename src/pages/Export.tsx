@@ -5,7 +5,9 @@ import {
   downloadWorkoutsCSV, 
   downloadExercisesCSV, 
   downloadSetsCSV,
-  downloadAllCSV 
+  downloadAllCSV,
+  downloadBodyweightCSV,
+  downloadAllCSVWithBodyweight
 } from '../utils/csv';
 
 const FILE_SCHEMAS = [
@@ -57,11 +59,22 @@ const FILE_SCHEMAS = [
       { name: 'rpe', desc: 'Rate of perceived exertion' },
       { name: 'completed', desc: 'Was set completed (true/false)' },
     ]
+  },
+  {
+    name: 'bodyweight.csv',
+    icon: 'monitor_weight',
+    description: 'One row per bodyweight entry',
+    columns: [
+      { name: 'date', desc: 'Date (YYYY-MM-DD)' },
+      { name: 'weight', desc: 'Bodyweight value' },
+      { name: 'unit', desc: 'Unit (kg or lb)' },
+      { name: 'note', desc: 'Optional note' },
+    ]
   }
 ];
 
 export const Export = () => {
-  const { history, settings } = useAppStore();
+  const { history, bodyweight, settings } = useAppStore();
   const [exportAll, setExportAll] = useState(true);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -85,10 +98,10 @@ export const Export = () => {
     return { workouts, exercises, sets };
   }, [filteredHistory]);
 
-  const handleDownload = (type: 'all' | 'workouts' | 'exercises' | 'sets') => {
+  const handleDownload = (type: 'all' | 'workouts' | 'exercises' | 'sets' | 'bodyweight') => {
     switch (type) {
       case 'all':
-        downloadAllCSV(filteredHistory);
+        downloadAllCSVWithBodyweight(filteredHistory, bodyweight);
         break;
       case 'workouts':
         downloadWorkoutsCSV(filteredHistory);
@@ -98,6 +111,9 @@ export const Export = () => {
         break;
       case 'sets':
         downloadSetsCSV(filteredHistory);
+        break;
+      case 'bodyweight':
+        downloadBodyweightCSV(bodyweight);
         break;
     }
   };
@@ -189,7 +205,7 @@ export const Export = () => {
           <div>
             <h3 className="font-bold text-lg">Download All Files</h3>
             <p className="text-sm text-text-sub-light dark:text-text-sub-dark">
-              Get all 3 CSV files at once
+              Get all CSV files at once
             </p>
           </div>
         </div>
@@ -236,8 +252,13 @@ export const Export = () => {
                   </span>
                 </button>
                 <button
-                  onClick={() => handleDownload(schema.name.replace('.csv', '') as 'workouts' | 'exercises' | 'sets')}
-                  disabled={stats.workouts === 0}
+                  onClick={() => {
+                    const fileType = schema.name.replace('.csv', '') as 'workouts' | 'exercises' | 'sets' | 'bodyweight';
+                    handleDownload(fileType);
+                  }}
+                  disabled={
+                    (schema.name === 'bodyweight.csv' ? bodyweight.length === 0 : stats.workouts === 0)
+                  }
                   className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg font-bold transition-opacity flex items-center gap-2"
                 >
                   <span className="material-symbols-outlined text-sm">download</span>

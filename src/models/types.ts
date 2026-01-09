@@ -57,6 +57,14 @@ export interface Settings {
   units: 'kg' | 'lb';
 }
 
+export interface BodyWeightEntry {
+  id: string;
+  dateISO: string; // "YYYY-MM-DD"
+  weight: number;
+  unit: 'lb' | 'kg';
+  note?: string;
+}
+
 export interface ExerciseDbItem {
   id: string | null;
   name: string;
@@ -74,6 +82,7 @@ export interface AppState {
   history: WorkoutSession[];
   templates: Template[];
   settings: Settings;
+  bodyweight: BodyWeightEntry[];
   // Workout actions
   startWorkout: (templateId?: string) => void;
   finishWorkout: () => { success: boolean; error?: string };
@@ -96,4 +105,8 @@ export interface AppState {
   deleteHistoryItem: (id: string) => void;
   duplicateWorkout: (id: string) => void;
   getPersonalRecords: () => Record<string, { weight: number; reps: number; date: number }>;
+  // Bodyweight actions
+  addBodyWeightEntry: (entry: Omit<BodyWeightEntry, 'id'>) => void;
+  updateBodyWeightEntry: (id: string, updates: Partial<Omit<BodyWeightEntry, 'id'>>) => void;
+  deleteBodyWeightEntry: (id: string) => void;
 }

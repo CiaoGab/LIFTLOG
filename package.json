@@ -10,19 +10,20 @@
     "build:exercise-db": "node scripts/build-exercise-db.mjs"
   },
   "dependencies": {
-    "react-router-dom": "^7.12.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "zustand": "^5.0.9",
-    "uuid": "^13.0.0"
+    "react-router-dom": "^7.12.0",
+    "recharts": "^3.6.0",
+    "uuid": "^13.0.0",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0",
-    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
-    "autoprefixer": "^10.4.20"
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
   }
 }

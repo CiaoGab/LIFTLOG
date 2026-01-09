@@ -1,4 +1,4 @@
-import { WorkoutSession } from '../models/types';
+import { WorkoutSession, BodyWeightEntry } from '../models/types';
 
 // Escape CSV field (handle commas, quotes, newlines)
 const escapeField = (value: string | number | boolean | undefined): string => {
@@ -193,6 +193,47 @@ export const downloadAllCSV = (history: WorkoutSession[]) => {
   downloadFile(generateWorkoutsCSV(history), 'workouts.csv');
   setTimeout(() => downloadFile(generateExercisesCSV(history), 'exercises.csv'), 100);
   setTimeout(() => downloadFile(generateSetsCSV(history), 'sets.csv'), 200);
+};
+
+// Generate bodyweight.csv
+export const generateBodyweightCSV = (bodyweight: BodyWeightEntry[]): string => {
+  const headers = ['date', 'weight', 'unit', 'note'];
+  
+  const rows = bodyweight.map(entry => [
+    entry.dateISO,
+    entry.weight,
+    entry.unit,
+    entry.note || ''
+  ]);
+
+  return toCSV(headers, rows);
+};
+
+// Download bodyweight CSV
+export const downloadBodyweightCSV = (bodyweight: BodyWeightEntry[]) => {
+  if (bodyweight.length === 0) {
+    // No bodyweight entries to export - silent fail
+    return;
+  }
+  downloadFile(generateBodyweightCSV(bodyweight), 'bodyweight.csv');
+};
+
+// Download all files (including bodyweight)
+export const downloadAllCSVWithBodyweight = (history: WorkoutSession[], bodyweight: BodyWeightEntry[]) => {
+  if (history.length === 0 && bodyweight.length === 0) {
+    // No data to export - silent fail
+    return;
+  }
+  
+  // Download with slight delays to ensure browser handles multiple downloads
+  if (history.length > 0) {
+    downloadFile(generateWorkoutsCSV(history), 'workouts.csv');
+    setTimeout(() => downloadFile(generateExercisesCSV(history), 'exercises.csv'), 100);
+    setTimeout(() => downloadFile(generateSetsCSV(history), 'sets.csv'), 200);
+  }
+  if (bodyweight.length > 0) {
+    setTimeout(() => downloadFile(generateBodyweightCSV(bodyweight), 'bodyweight.csv'), 300);
+  }
 };
 
 // Legacy single-file export (kept for compatibility)

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AppState, WorkoutSession, Exercise, Set, Template } from '../models/types';
+import { AppState, WorkoutSession, Exercise, Set, Template, BodyWeightEntry } from '../models/types';
 import { v4 as uuidv4 } from 'uuid';
 import { DEFAULT_TEMPLATES } from '../data/defaultTemplates';
 
@@ -16,6 +16,7 @@ export const useAppStore = create<AppState>()(
         theme: 'dark',
         units: 'kg'
       },
+      bodyweight: [],
 
       startWorkout: (templateId) => {
         const { templates } = get();
@@ -341,6 +342,30 @@ export const useAppStore = create<AppState>()(
         });
 
         return prs;
+      },
+
+      // Bodyweight actions
+      addBodyWeightEntry: (entry) => {
+        const { bodyweight } = get();
+        const newEntry: BodyWeightEntry = {
+          id: uuidv4(),
+          ...entry
+        };
+        set({ bodyweight: [...bodyweight, newEntry].sort((a, b) => b.dateISO.localeCompare(a.dateISO)) });
+      },
+
+      updateBodyWeightEntry: (id, updates) => {
+        const { bodyweight } = get();
+        set({
+          bodyweight: bodyweight.map(entry =>
+            entry.id === id ? { ...entry, ...updates } : entry
+          ).sort((a, b) => b.dateISO.localeCompare(a.dateISO))
+        });
+      },
+
+      deleteBodyWeightEntry: (id) => {
+        const { bodyweight } = get();
+        set({ bodyweight: bodyweight.filter(entry => entry.id !== id) });
       }
     }),
     {
@@ -400,6 +425,11 @@ export const useAppStore = create<AppState>()(
             }
             return ex;
           });
+        }
+
+        // Initialize bodyweight if missing
+        if (persisted.bodyweight === undefined) {
+          persisted.bodyweight = [];
         }
 
         return { ...currentState, ...persisted };

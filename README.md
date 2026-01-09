@@ -1,25 +1,75 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# LIFTLOG — Personal Workout Log (Local-First)
 
-# Run and deploy your AI Studio app
+A fast, local-first workout logging app built for real-time set tracking, templates, history, analytics, and spreadsheet exports.
 
-This contains everything you need to run your app locally.
+**Core goals**
+- Start logging in seconds
+- Save and reuse workout templates
+- Track lift trends + training volume over time
+- Export everything to CSV (spreadsheet-friendly)
+- Local-first (no backend / no external APIs required)
 
-View your app in AI Studio: https://ai.studio/apps/temp/1
+---
 
-## Run Locally
+## Features
 
-**Prerequisites:**  Node.js
+### Workout logging
+- Quick start workout or start from a template
+- Log sets live (weight + reps)
+- Toggle **Reps ↔ Time** per exercise  
+  - Cardio defaults to **time-based** logging
+- Rest timing aligned to each exercise’s rest settings
+- Finish workout → saved into History
 
+### Templates
+- Default starter templates included
+- Start from template (expands sets automatically)
+- Manage templates locally
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. **Set up exercise database (optional but recommended):**
-   - Clone or download the exercise database from https://github.com/yuhonas/free-exercise-db
-   - Place the `exercises.json` file at: `scripts/source/free-exercise-db/dist/exercises.json`
-   - Run: `npm run build:exercise-db`
-   - This will generate `public/exercises.db.json` for use in the app
-4. Run the app:
-   `npm run dev`
+### History
+- View completed workouts
+- Workout detail view
+- Duplicate past workouts into a new session
+
+### Analytics (Progress)
+- Summary stats computed from real workout history (completed sets)
+- Weekly training volume trend
+- Exercise trend: top set weight over time
+- Bodyweight logging + bodyweight trend
+- Charts powered by **Recharts**
+
+### Export
+- Export workouts/exercises/sets to CSV
+- Export bodyweight logs to CSV
+- Designed for easy spreadsheet analysis (Google Sheets / Excel)
+
+---
+
+## Tech Stack
+
+### App
+- **Vite** + **React** + **TypeScript**
+- **TailwindCSS**
+- **Recharts** (analytics charts)
+- Local persistence (local-first)
+
+### Tools used in the build process
+- **Google Stitch (Gemini Stitch)** — initial UI generation / screen concepts
+- **Google AI Studio (Gemini 3 Pro)** — early scaffolding + iteration support
+- **Cursor** — implementation, refactoring, and feature delivery with agent workflows
+- **ChatGPT (GPT-5.2 Thinking)** — architecture, prompting strategy, QA plans, dataset integration approach, and iterative implementation guidance
+
+> This repo reflects an AI-assisted workflow: design → prototype → implementation → refinement, with local-first constraints and tight scope control.
+
+---
+
+## Getting Started
+
+### Requirements
+- Node.js 18+ recommended
+- npm
+
+### Install + run
+```bash
+npm install
+npm run dev
